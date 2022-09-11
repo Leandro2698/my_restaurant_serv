@@ -7,22 +7,22 @@ const restaurantSchema = new Schema(
     },
     description: {
       type: String,
-    }, 
+    },
     address: {
       type: String,
-    }, 
+    },
     city: {
       type: String,
-    }, 
+    },
     country: {
       type: String,
-    }, 
+    },
     create_at: {
-      type: String
-    }, 
-    status:{ 
-      type: String, 
-      enum: ['new','progress','completed', ]
+      type: String,
+    },
+    status: {
+      type: String,
+      enum: ['new', 'progress', 'completed'],
     },
     admin: [
       {
@@ -36,16 +36,16 @@ const restaurantSchema = new Schema(
         lastname: String,
         role: String,
         salary: String,
+        admin: String,
       },
     ],
     products: [
       {
         name: String,
-        picture: [String],
         year: String,
         unit_product_sold: String,
         unit_sale_price: String,
-        turnover_product: String
+        turnover_product: String,
       },
     ],
     turnovers_years: [
@@ -53,7 +53,7 @@ const restaurantSchema = new Schema(
         // type: mongoose.Schema.Types.ObjectId,
         // ref: 'Turnover',
         year: String,
-        total: String
+        total: String,
       },
     ],
   },

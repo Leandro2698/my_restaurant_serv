@@ -23,7 +23,7 @@ const userSchema = new Schema(
       type: String,
     },
     create_at: {
-      type: String
+      type: String,
     },
     restaurants: [
       {

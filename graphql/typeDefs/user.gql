@@ -30,7 +30,7 @@ input UpdateUser {
 }
 input DeleteUser {
   id: ID!
-}
+} 
 
 type Query { 
   getUser(userId : ID!): User
@@ -43,4 +43,4 @@ type Mutation {
   updateUser(userId : ID!, updateUserInput: UpdateUser): User
   deleteUser(deleteUserInput: DeleteUser): User
 }
-`
+`;

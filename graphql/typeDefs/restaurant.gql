@@ -10,10 +10,31 @@ type Restaurant {
   country: String
   create_at: String
   status: String
-  admin: [User]
-  # employees: [Employee]
-  # products: [Product]
-  # turnovers_years: [Turnover]
+  admin: [User!]
+  employees: [Employee]!
+  products: [Product]!
+  turnovers_years: [Turnover]!
+} 
+type Employee {
+  id: ID
+  firstname: String
+  lastname: String
+  role: String
+  salary: String
+  admin: String
+} 
+type Product {
+  id: ID
+  name: String,
+  year: String,
+  unit_product_sold: String,
+  unit_sale_price: String,
+  turnover_product: String
+} 
+type Turnover {
+  id: ID
+  year: String,
+  total: String,
 } 
 input CreateRestaurant {
   name: String
@@ -26,6 +47,12 @@ input CreateRestaurant {
   # products: [ID]
   # turnovers_years: [ID]
 }
+input CreateEmployee {
+  firstname: String
+  lastname: String
+  role: String
+  salary: String
+} 
 enum STATUS {
   new
   progress
@@ -39,5 +66,8 @@ type Query {
 type Mutation {
   createRestaurant(createRestaurantInput: CreateRestaurant): Restaurant!
   deleteRestaurant(restaurantId: ID!): Restaurant
+  createEmployee(restaurantId: String!, createEmployeeInput: CreateEmployee ): Restaurant
+  deleteEmployee(restaurantId: ID!, employeeId: ID! ): Restaurant
+
   # updateRestaurant(restaurantId : ID!, createRestaurantInput: CreateRestaurant): Restaurant
-}`
+}`;

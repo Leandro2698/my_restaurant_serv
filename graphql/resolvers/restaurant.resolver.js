@@ -1,11 +1,14 @@
+const { AuthenticationError } = require('apollo-server');
 const Restaurant = require('../../models/Restaurant');
 const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
+
 
 module.exports = {
   Query: {
     async getRestaurants(){
       try {
+        // the sort is for have the last restaurant
         const restaurant = await Restaurant.find().sort({ createdAt: -1 }).populate(['admin']);
         return restaurant;
       } catch (err) {
@@ -58,10 +61,35 @@ module.exports = {
       let userRestaurant = await User.findById(newRestaurant.admin)
       userRestaurant.restaurants.push(newRestaurant.id)
       userRestaurant.save()
-      
+
       const restaurant = await newRestaurant.save();
 
       return restaurant.populate(['admin'])
+    },
+
+    async deleteRestaurant(_,{restaurantId}, context){
+      const user = checkAuth(context);
+      try {
+        const restaurant = await Restaurant.findById(restaurantId)      
+        if(restaurant.admin.includes(user.id)){
+
+          const deleteRestaurantUser = await User.findById(user.id)
+
+          const restaurantToRemove =  deleteRestaurantUser.restaurants.indexOf(restaurantId)
+          deleteRestaurantUser.restaurants.splice(restaurantToRemove,1)
+          deleteRestaurantUser.save()
+          
+          await restaurant.delete();
+          return `${restaurant} deleted succesfull`
+          
+        }
+        else{
+          throw new AuthenticationError('Action not allowed')
+        }
+      } catch (err) {
+        throw new Error(err)
+      }
+
     }
   }
 }

@@ -14,7 +14,7 @@ function generateToken(user) {
       email: user.email,
     },
     `${process.env.JWT_SECRET}`,
-    { expiresIn: '2h' }
+    { expiresIn: '2h' } 
   );
 }
 
@@ -95,7 +95,7 @@ module.exports = {
         }
       
       // See if the user exists with the email
-      const user = await User.findOne({email});
+      const user = await User.findOne({email}).populate(['restaurants']);
 
       if(!user){
         errors.general = 'User not found'
@@ -145,7 +145,12 @@ module.exports = {
 
     async deleteUser(_, { deleteUserInput: { id } }) {
       try {
+        
         const user = await User.findByIdAndRemove(id)
+        const userRestaurant = user.restaurants
+        for(let i = 0 ; i < userRestaurant.length ; i++){
+          await Restaurant.findByIdAndRemove(userRestaurant[i])
+        }
         return user;
       } catch (err) {
         console.log(err);

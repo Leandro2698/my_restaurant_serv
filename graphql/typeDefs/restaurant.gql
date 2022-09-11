@@ -38,6 +38,6 @@ type Query {
 }
 type Mutation {
   createRestaurant(createRestaurantInput: CreateRestaurant): Restaurant!
-  # deleteRestaurant(restaurantId: ID!): Restaurant
+  deleteRestaurant(restaurantId: ID!): Restaurant
   # updateRestaurant(restaurantId : ID!, createRestaurantInput: CreateRestaurant): Restaurant
 }`

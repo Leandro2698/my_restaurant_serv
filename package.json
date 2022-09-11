@@ -1,0 +1,31 @@
+{
+  "name": "my_restaurant_serv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leandro2698/my_restaurant_serv.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Leandro2698/my_restaurant_serv/issues"
+  },
+  "homepage": "https://github.com/Leandro2698/my_restaurant_serv#readme",
+  "dependencies": {
+    "@graphql-tools/load-files": "^6.6.1",
+    "apollo-server": "^3.10.2",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.2",
+    "graphql": "^16.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.5.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}

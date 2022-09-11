@@ -1,0 +1,43 @@
+const { gql } = require('apollo-server');
+
+module.exports = gql`
+type Restaurant {
+  id: ID 
+  name: String
+  description: String
+  address: String
+  city: String
+  country: String
+  create_at: String
+  status: String
+  admin: [User]
+  # employees: [Employee]
+  # products: [Product]
+  # turnovers_years: [Turnover]
+} 
+input CreateRestaurant {
+  name: String
+  description: String
+  address: String
+  city: String
+  country: String
+  status: STATUS
+  # employees: [ID]
+  # products: [ID]
+  # turnovers_years: [ID]
+}
+enum STATUS {
+  new
+  progress
+  completed
+}
+
+type Query {
+  getRestaurant(restaurantId : ID!): Restaurant
+  getRestaurants: [Restaurant]
+}
+type Mutation {
+  createRestaurant(createRestaurantInput: CreateRestaurant): Restaurant!
+  # deleteRestaurant(restaurantId: ID!): Restaurant
+  # updateRestaurant(restaurantId : ID!, createRestaurantInput: CreateRestaurant): Restaurant
+}`

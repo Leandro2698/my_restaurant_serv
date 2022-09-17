@@ -24,18 +24,17 @@ const restaurantSchema = new Schema(
       type: String,
       enum: ['new', 'progress', 'completed'],
     },
-    admin: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
+    admin: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+
     employees: [
       {
         firstname: String,
         lastname: String,
         role: String,
-        salary: String,
+        salary: Number,
         admin: String,
       },
     ],
@@ -43,17 +42,15 @@ const restaurantSchema = new Schema(
       {
         name: String,
         year: String,
-        unit_product_sold: String,
-        unit_sale_price: String,
-        turnover_product: String,
+        unitProductSold: Number,
+        unitSalePrice: Number,
+        turnoverProduct: Number,
       },
     ],
-    turnovers_years: [
+    turnoversYears: [
       {
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: 'Turnover',
         year: String,
-        total: String,
+        total: Number,
       },
     ],
   },

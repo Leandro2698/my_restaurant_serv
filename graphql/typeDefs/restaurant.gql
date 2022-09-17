@@ -13,28 +13,20 @@ type Restaurant {
   admin: [User!]
   employees: [Employee]!
   products: [Product]!
-  turnovers_years: [Turnover]!
+  turnoversYears: [Turnover]!
 } 
 type Employee {
   id: ID
   firstname: String
   lastname: String
   role: String
-  salary: String
+  salary: Int
   admin: String
-} 
-type Product {
-  id: ID
-  name: String,
-  year: String,
-  unit_product_sold: String,
-  unit_sale_price: String,
-  turnover_product: String
 } 
 type Turnover {
   id: ID
   year: String,
-  total: String,
+  total: Int,
 } 
 input CreateRestaurant {
   name: String
@@ -43,9 +35,11 @@ input CreateRestaurant {
   city: String
   country: String
   status: STATUS
-  # employees: [ID]
-  # products: [ID]
-  # turnovers_years: [ID]
+}
+enum STATUS {
+  new
+  progress
+  completed
 }
 input CreateEmployee {
   firstname: String
@@ -53,11 +47,6 @@ input CreateEmployee {
   role: String
   salary: String
 } 
-enum STATUS {
-  new
-  progress
-  completed
-}
 
 type Query {
   getRestaurant(restaurantId : ID!): Restaurant
@@ -69,5 +58,5 @@ type Mutation {
   createEmployee(restaurantId: String!, createEmployeeInput: CreateEmployee ): Restaurant
   deleteEmployee(restaurantId: ID!, employeeId: ID! ): Restaurant
 
-  # updateRestaurant(restaurantId : ID!, createRestaurantInput: CreateRestaurant): Restaurant
+  updateRestaurant(restaurantId : ID!, createRestaurantInput: CreateRestaurant): Restaurant
 }`;

@@ -1,0 +1,31 @@
+const { gql } = require('apollo-server');
+
+module.exports = gql`
+
+type Product {
+  id: ID
+  name: String,
+  year: String,
+  unitProductSold: Int,
+  unitSalePrice: Int,
+  turnoverProduct: Int
+} 
+
+input CreateProduct {
+  name: String,
+  unitSalePrice: Int,
+} 
+input UpdateProduct {
+  name: String,
+  unitSalePrice: Int,
+} 
+input SoldProduct {
+  unitProductSold: Int, 
+} 
+
+type Mutation {
+  createProduct(restaurantId: String!, createProductInput: CreateProduct ): Restaurant
+  updateProduct(restaurantId : ID!, productId: ID!, updateProductInput: UpdateProduct): Restaurant
+  soldProduct(restaurantId : ID!, productId: ID!, soldProductInput: SoldProduct): Restaurant
+  deleteProduct(restaurantId: ID!, productId: ID! ): Restaurant
+}`;

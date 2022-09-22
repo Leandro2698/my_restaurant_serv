@@ -57,6 +57,5 @@ type Mutation {
   deleteRestaurant(restaurantId: ID!): Restaurant
   createEmployee(restaurantId: String!, createEmployeeInput: CreateEmployee ): Restaurant
   deleteEmployee(restaurantId: ID!, employeeId: ID! ): Restaurant
-
   updateRestaurant(restaurantId : ID!, createRestaurantInput: CreateRestaurant): Restaurant
 }`;

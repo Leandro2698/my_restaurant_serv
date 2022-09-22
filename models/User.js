@@ -19,9 +19,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    token: {
-      type: String,
-    },
     create_at: {
       type: String,
     },

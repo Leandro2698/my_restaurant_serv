@@ -22,7 +22,7 @@ const restaurantSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['new', 'progress', 'completed'],
+      enum: ['new', 'draft', 'done'],
     },
     admin: {
       type: Schema.Types.ObjectId,
@@ -45,6 +45,16 @@ const restaurantSchema = new Schema(
         unitProductSold: Number,
         unitSalePrice: Number,
         turnoverProduct: Number,
+        category: {
+          type: String,
+          enum: ['drink', 'food', 'other'],
+        },
+        status: {
+          type: String,
+          enum: ['new', 'draft', 'done'],
+        },
+        delivery: Number,
+        onSite: Number,
       },
     ],
     turnoversYears: [

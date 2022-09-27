@@ -16,7 +16,7 @@ module.exports = {
     },
     async getRestaurant(_, { restaurantId }) {
       const restaurant = await Restaurant.findById(restaurantId).populate('admin');
-      // console.log('restarestaurant.admin', restaurant.admin.firstname);
+      // function populate pour restaurant admin
       if (restaurant) {
         turnoverRestaurant(restaurant);
         await restaurant.save();
@@ -34,7 +34,6 @@ module.exports = {
         address,
         city,
         country,
-        status,
       },
     }, context) {
       const user = checkAuth(context);
@@ -45,7 +44,7 @@ module.exports = {
           address,
           city,
           country,
-          status,
+          status: 'new',
           admin: user.id,
           create_at: new Date().getFullYear(),
           turnoversYears: {

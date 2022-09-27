@@ -9,15 +9,30 @@ type Product {
   unitProductSold: Int,
   unitSalePrice: Int,
   turnoverProduct: Int
+  category: String
+  status: String
 } 
 
+enum STATUS {
+  new
+  draft
+  done
+}
+enum CATEGORY {
+  drink
+  food
+  other
+}
 input CreateProduct {
   name: String,
   unitSalePrice: Int,
+  category: CATEGORY
 } 
 input UpdateProduct {
   name: String,
   unitSalePrice: Int,
+  status: STATUS
+  category: CATEGORY
 } 
 input SoldProduct {
   unitProductSold: Int, 

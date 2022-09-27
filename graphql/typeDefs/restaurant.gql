@@ -10,7 +10,7 @@ type Restaurant {
   country: String
   create_at: String
   status: String
-  admin: [User!]
+  admin: User!
   employees: [Employee]!
   products: [Product]!
   turnoversYears: [Turnover]!
@@ -38,8 +38,8 @@ input CreateRestaurant {
 }
 enum STATUS {
   new
-  progress
-  completed
+  draft
+  done
 }
 input CreateEmployee {
   firstname: String

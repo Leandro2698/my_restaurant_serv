@@ -12,6 +12,7 @@ module.exports = {
       {
         name,
         unitSalePrice,
+        category,
       },
     }, context) {
       // eslint-disable-next-line
@@ -25,6 +26,8 @@ module.exports = {
           year: new Date().getFullYear(),
           unitSalePrice,
           unitProductSold: 0,
+          category,
+          status: 'new',
         });
         await restaurant.save();
         return restaurant;
@@ -37,6 +40,8 @@ module.exports = {
       {
         name,
         unitSalePrice,
+        category,
+        status,
       },
     }, context) {
       const user = checkAuth(context);
@@ -48,6 +53,8 @@ module.exports = {
         if (restaurant.admin.toString() === user.id) {
           myProduct.name = name;
           myProduct.unitSalePrice = unitSalePrice;
+          myProduct.category = category;
+          myProduct.status = status;
           await restaurant.save();
           return restaurant;
         }

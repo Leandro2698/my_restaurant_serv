@@ -1,4 +1,8 @@
-// calcul of turnover  of the restaurant
+/**
+ * Make the calcul turnover for the restaurant
+ * @param {[Object]} restaurant object Restaurant
+ * @returns the result of the turnover of each reactaurant.
+ */
 module.exports = (restaurant) => {
   if (restaurant) {
     const listTurnover = [];

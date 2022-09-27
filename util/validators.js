@@ -1,3 +1,8 @@
+/**
+ * Verify if all the inputs respects somesrules.
+ * @param {[String]} Inputs string of input use
+ * @returns error or valid.
+ */
 module.exports.validateRegisterInput = (
   firstname,
   lastname,
@@ -31,7 +36,11 @@ module.exports.validateRegisterInput = (
     valid: Object.keys(errors).length < 1,
   };
 };
-
+/**
+ * Verify if all the inputs respects somesrules.
+ * @param {[String]} Inputs string of input use
+ * @returns error or valid.
+ */
 module.exports.validateLoginInput = (email, password) => {
   const errors = {};
 

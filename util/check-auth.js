@@ -4,6 +4,12 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+/**
+ * Verify if the autorization of the header is correct and verify
+ * if the token of the user is correct.
+ * @param {[Object]} User argument for passing e authentication scope for all resolver might need
+ * @returns user.
+ */
 module.exports = (context) => {
   const authHeader = context.req.headers.authorization;
   if (authHeader) {

@@ -27,7 +27,7 @@ module.exports = {
           unitSalePrice,
           unitProductSold: 0,
           category,
-          status: 'new',
+          status: 'draft',
         });
         await restaurant.save();
         return restaurant;

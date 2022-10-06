@@ -8,15 +8,17 @@ type Product {
   year: String,
   unitProductSold: Int,
   unitSalePrice: Int,
+  stock: Int
   turnoverProduct: Int
   category: String
   status: String
+  delivery: Int
+  omSite: Int
 } 
 
 enum STATUS {
-  new
   draft
-  done
+  Published
 }
 enum CATEGORY {
   drink

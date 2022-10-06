@@ -4,12 +4,7 @@ module.exports = gql`
 type Restaurant {
   id: ID 
   name: String
-  description: String
-  address: String
-  city: String
-  country: String
   create_at: String
-  status: String
   admin: User!
   employees: [Employee]!
   products: [Product]!
@@ -30,17 +25,8 @@ type Turnover {
 } 
 input CreateRestaurant {
   name: String
-  description: String
-  address: String
-  city: String
-  country: String
-  status: STATUS
 }
-enum STATUS {
-  new
-  draft
-  done
-}
+
 input CreateEmployee {
   firstname: String
   lastname: String
@@ -49,7 +35,7 @@ input CreateEmployee {
 } 
 
 type Query {
-  getRestaurant(restaurantId : ID!): Restaurant
+  getRestaurant(restaurantId : ID!): Restaurant!
   getRestaurants: [Restaurant]
 }
 type Mutation {

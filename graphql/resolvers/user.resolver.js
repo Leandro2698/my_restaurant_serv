@@ -12,7 +12,8 @@ function generateToken(user) {
   return jwt.sign(
     {
       id: user.id,
-      email: user.email,
+      firstname: user.firstname,
+      restaurants: user.restaurants,
     },
     `${process.env.JWT_SECRET}`,
     { expiresIn: '2h' },
@@ -35,14 +36,14 @@ module.exports = {
     /* eslint-disable */ 
     async getUsers(_, {}) {
       const users = await User.find({}).populate(['restaurants']);
-      console.log('userusers', users);
+      console.log('Get_Users', users);
       return users;
     },
   },
   Mutation: {
     async registerUser(_, {
       registerInput: {
-        firstname, lastname, email, password, confirmPassword,
+        firstname, lastname, email, password, confirmPassword
       },
     }) {
       // Validate user data
@@ -76,10 +77,10 @@ module.exports = {
 
       // Save our user in MongoDB
       const res = await newUser.save();
-
       // Create our JWT(attatch to our User model)
       const token = generateToken(res);
 
+      console.log('register user',res);
       return {
         ...res._doc,
         id: res._id,
@@ -114,7 +115,7 @@ module.exports = {
       }
 
       const token = generateToken(user);
-
+      console.log('login user', user);
       return {
         ...user._doc,
         id: user._id,
@@ -127,7 +128,6 @@ module.exports = {
         firstname, lastname, email, restaurants,
       },
     }) {
-      console.log('userId', id);
       try {
         const updateUser = await User.findByIdAndUpdate(
           id,

@@ -2,7 +2,7 @@ const { AuthenticationError } = require('apollo-server');
 const Restaurant = require('../../models/Restaurant');
 const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
-const turnoverRestaurant = require('../../util/turnoverRestaurant');
+// const turnoverRestaurant = require('../../util/turnoverRestaurant');
 
 module.exports = {
   Query: {
@@ -14,12 +14,12 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async getRestaurant(_, { restaurantId }) {
-      const restaurant = await Restaurant.findById(restaurantId).populate('admin');
+    async getRestaurant(_, { restaurantId: id }) {
+      const restaurant = await Restaurant.findById(id).populate('admin');
       // function populate pour restaurant admin
       if (restaurant) {
-        turnoverRestaurant(restaurant);
-        await restaurant.save();
+        // turnoverRestaurant(restaurant);
+        // await restaurant.save();
         return restaurant;
       }
       throw new Error('restaurant not found');
@@ -30,21 +30,12 @@ module.exports = {
       createRestaurantInput:
       {
         name,
-        description,
-        address,
-        city,
-        country,
       },
     }, context) {
       const user = checkAuth(context);
       const newRestaurant = new Restaurant(
         {
           name,
-          description,
-          address,
-          city,
-          country,
-          status: 'new',
           admin: user.id,
           create_at: new Date().getFullYear(),
           turnoversYears: {
@@ -87,10 +78,6 @@ module.exports = {
       restaurantId, createRestaurantInput:
       {
         name,
-        description,
-        address,
-        city,
-        country,
       },
     }, context) {
       const user = checkAuth(context);
@@ -99,7 +86,7 @@ module.exports = {
         const updateRestaurant = await Restaurant.findByIdAndUpdate(
           restaurantId,
           {
-            name, description, address, city, country, status: 'progress',
+            name,
           },
           { new: true },
         );

@@ -3,23 +3,19 @@ const Restaurant = require('../../models/Restaurant');
 const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
 // const turnoverRestaurant = require('../../util/turnoverRestaurant');
-
 module.exports = {
   Query: {
     async getRestaurants() {
       try {
-        const restaurant = await Restaurant.find().populate('admin');
-        return restaurant;
+        const restaurants = await Restaurant.find().populate('admin');
+        return restaurants;
       } catch (err) {
         throw new Error(err);
       }
     },
     async getRestaurant(_, { restaurantId: id }) {
       const restaurant = await Restaurant.findById(id).populate('admin');
-      // function populate pour restaurant admin
       if (restaurant) {
-        // turnoverRestaurant(restaurant);
-        // await restaurant.save();
         return restaurant;
       }
       throw new Error('restaurant not found');
@@ -37,11 +33,6 @@ module.exports = {
         {
           name,
           admin: user.id,
-          create_at: new Date().getFullYear(),
-          turnoversYears: {
-            year: new Date().getFullYear(),
-            total: 0,
-          },
         },
       );
       const userRestaurant = await User.findById(newRestaurant.admin);

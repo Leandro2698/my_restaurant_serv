@@ -8,9 +8,6 @@ const restaurantSchema = new Schema(
     description: {
       type: String,
     },
-    create_at: {
-      type: String,
-    },
     admin: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -25,13 +22,27 @@ const restaurantSchema = new Schema(
         admin: String,
       },
     ],
+    sales: [
+      {
+        productId: String,
+        createdAt: Number,
+        unitProductSold: Number,
+
+      },
+    ],
     products: [
       {
         name: String,
-        year: String,
-        unitProductSold: Number,
+        createdAt: Number,
+        // unitProductSold: Number,
         unitSalePrice: Number,
         turnoverProduct: Number,
+        turnoversProduct: [
+          {
+            createdAt: Number,
+            turnoverYear: Number,
+          },
+        ],
         stock: Number,
         category: {
           type: String,
@@ -45,10 +56,10 @@ const restaurantSchema = new Schema(
         onSite: Number,
       },
     ],
-    turnoversYears: [
+    turnoversRestaurant: [
       {
-        year: String,
-        total: Number,
+        createdAt: Number,
+        turnoverYear: Number,
       },
     ],
   },

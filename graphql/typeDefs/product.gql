@@ -5,17 +5,22 @@ module.exports = gql`
 type Product {
   id: ID
   name: String,
-  year: String,
-  unitProductSold: Int,
+  createdAt: Float,
+  # unitProductSold: Int,
   unitSalePrice: Int,
   stock: Int
   turnoverProduct: Int
+  turnoversProduct: [TurnoversProduct]
   category: String
   status: String
   delivery: Int
   omSite: Int
 } 
-
+type TurnoversProduct {
+  id: ID
+  createdAt: Float, 
+  turnoverYear: Int,
+} 
 enum STATUS {
   draft
   Published

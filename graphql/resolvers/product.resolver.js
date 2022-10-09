@@ -1,9 +1,10 @@
 const { UserInputError } = require('apollo-server');
 const { AuthenticationError } = require('apollo-server');
+const { format } = require('date-fns');
 const Restaurant = require('../../models/Restaurant');
 const checkAuth = require('../../util/check-auth');
-const turnoverProducts = require('../../util/turnoverProducts');
-const turnoverRestaurant = require('../../util/turnoverRestaurant');
+const turnoversProduct = require('../../util/turnoversProduct');
+const turnoversRestaurant = require('../../util/turnoversRestaurant');
 
 module.exports = {
   Mutation: {
@@ -19,13 +20,16 @@ module.exports = {
       const user = checkAuth(context);
 
       const restaurant = await Restaurant.findById(restaurantId);
-
       if (restaurant) {
         restaurant.products.unshift({
           name,
-          year: new Date().getFullYear(),
+          createdAt: new Date(),
           unitSalePrice,
           unitProductSold: 0,
+          turnoversProduct: {
+            createdAt: new Date(),
+            turnoverYear: 0,
+          },
           category,
           status: 'draft',
         });
@@ -73,13 +77,23 @@ module.exports = {
 
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
-        const productIndex = restaurant.products.findIndex((product) => product.id === productId);
-        const myProduct = Object.values(restaurant.products)[productIndex];
+        const thisYear = new Date();
+        const foundSale = restaurant.sales.some((e) => format(e.createdAt, 'yyyy') === format(thisYear, 'yyyy') && e.productId === productId);
         if (restaurant.admin.toString() === user.id) {
-          myProduct.unitProductSold += unitProductSold;
-          turnoverProducts(restaurant);
-          turnoverRestaurant(restaurant);
+          const saleProduct = restaurant.sales.find((e) => e.productId === productId);
+          if (!foundSale) {
+            restaurant.sales.unshift({
+              productId,
+              createdAt: new Date(),
+              unitProductSold: +unitProductSold,
+            });
+          } else {
+            saleProduct.unitProductSold += unitProductSold;
+          }
+          turnoversProduct(restaurant, productId);
+          turnoversRestaurant(restaurant);
           await restaurant.save();
+
           return restaurant;
         }
         throw new AuthenticationError('Action not allowed');

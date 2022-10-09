@@ -1,14 +1,17 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+
+# scalar Date
+
 type Restaurant {
   id: ID 
   name: String
-  create_at: String
   admin: User!
   employees: [Employee]!
   products: [Product]!
-  turnoversYears: [Turnover]!
+  turnoversRestaurant: [Turnover]!
+  sales: [Sales]!
 } 
 type Employee {
   id: ID
@@ -20,8 +23,14 @@ type Employee {
 } 
 type Turnover {
   id: ID
-  year: String,
-  total: Int,
+  createdAt: Float, 
+  turnoverYear: Int,
+} 
+type Sales {
+  id: ID
+  productId: ID 
+  createdAt: Float, 
+  unitProductSold: Int,
 } 
 input CreateRestaurant {
   name: String

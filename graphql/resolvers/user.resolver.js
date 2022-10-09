@@ -55,11 +55,13 @@ module.exports = {
       }
  
       // See if an old user exists with email attempting to register
-      const oldUser = await User.findOne({ email });
-
-      // Throw error if that user exists
-      if (oldUser) {
-        throw new UserInputError(`A user is already register with the email ${email}`, 'USER_ALREADY_EXISTS');
+      const user = await User.findOne({ email });
+      if (user) {
+        throw new UserInputError('Email is taken', {
+          errors: {
+            email: 'This email is taken'
+          }
+        });
       }
 
       // Emcrypt password
@@ -70,7 +72,6 @@ module.exports = {
         firstname,
         lastname,
         email: email.toLowerCase(),
-        create_at: new Date().toLocaleDateString(),
         password: encryptedPassword,
 
       });

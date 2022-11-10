@@ -57,6 +57,7 @@ module.exports = {
               income: 0,
               month: format(date, 'MMMM'),
               year: format(date, 'yyyy'),
+              day: format(date, 'd'),
               sales: 0,
             },
             turnoversProductYear: {
@@ -115,18 +116,20 @@ module.exports = {
       if (restaurant) {
         const thisYear = new Date();
         const product = restaurant.products.find((e) => e.id === productId);
-        const foundTurnoversProductMonth = product.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
-
+        // const foundTurnoversProductMonth = product.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
+        const foundTurnoversProductDay = product.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
+        // console.log('foundTurfoundTurnoversProductDay', foundTurnoversProductDay);
         if (restaurant.admin.toString() === user.id) {
           const turnoverMonth = product.turnoversProductMonth.find((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
           const priceProduct = product.unitSalePrice;
 
-          if (!foundTurnoversProductMonth) {
+          if (!foundTurnoversProductDay) {
             product.turnoversProductMonth.unshift({
               sales: +unitProductSold,
               income: unitProductSold * priceProduct,
               month: format(thisYear, 'MMMM'),
               year: format(thisYear, 'yyyy'),
+              day: format(thisYear, 'd'),
             });
           } else {
             turnoverMonth.sales += unitProductSold;

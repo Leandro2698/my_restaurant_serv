@@ -23,10 +23,10 @@ mongoose
     console.log('MongoDB Connected');
     return server.listen({ port: PORT });  
   })  
-  .then((res) => {  
+  .then((res) => {   
     console.log(`Server running at ${res.url}`);  
-  })        
-  .catch((err) => {                   
+  })         
+  .catch((err) => {                     
     console.error(err);                       
   });                               
-                                       
+                                         

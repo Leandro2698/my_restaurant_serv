@@ -27,9 +27,11 @@ type TurnoversProductYear {
 type TurnoversProductMonth {
   id: ID
   income: Int,
-  month: String,
   year: String,
+  month: String,
+  day: String,
   sales: Int,
+
 } 
 
 enum STATUS { 

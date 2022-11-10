@@ -27,6 +27,7 @@ const restaurantSchema = new Schema(
             month: String,
             year: String,
             sales: Number,
+            day: String,
           },
         ],
         stock: Number,

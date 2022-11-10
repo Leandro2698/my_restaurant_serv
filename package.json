@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon -e ts,mjs,graphql index.ts"
+    "start": "ts-node index.ts",
+    "watch": "nodemon -e ts,js,gql -x npm start"
   },
   "repository": {
     "type": "git",

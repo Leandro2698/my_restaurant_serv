@@ -3,10 +3,37 @@ const { AuthenticationError } = require('apollo-server');
 const { format } = require('date-fns');
 const Restaurant = require('../../models/Restaurant');
 const checkAuth = require('../../util/check-auth');
-const turnoversProduct = require('../../util/turnoversProduct');
-const turnoversRestaurant = require('../../util/turnoversRestaurant');
+const turnoversYearRestaurant = require('../../util/turnoversYearRestaurant');
+const turnoverYearProduct = require('../../util/turnoverYearProduct');
 
 module.exports = {
+  Query: {
+    async getProduct(_, { restaurantId, productId }, context) {
+      const restaurant = await Restaurant.findById(restaurantId);
+      const user = checkAuth(context);
+      if (restaurant) {
+        if (restaurant.admin.toString() === user.id) {
+          const productIndex = restaurant.products.findIndex((product) => product.id === productId);
+          const myProduct = Object.values(restaurant.products)[productIndex];
+          return myProduct;
+        }
+        throw new AuthenticationError('Action not allowed');
+      }
+      throw new Error('product not found');
+    },
+    async getProducts(_, { restaurantId }, context) {
+      const restaurant = await Restaurant.findById(restaurantId);
+      const user = checkAuth(context);
+      if (restaurant) {
+        if (restaurant.admin.toString() === user.id) {
+          const { products } = restaurant;
+          return products;
+        }
+        throw new AuthenticationError('Action not allowed');
+      }
+      throw new Error('product not found');
+    },
+  },
   Mutation: {
     async createProduct(_, {
       restaurantId, createProductInput:
@@ -16,25 +43,34 @@ module.exports = {
         category,
       },
     }, context) {
-      // eslint-disable-next-line
       const user = checkAuth(context);
+      const date = new Date();
 
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
-        restaurant.products.unshift({
-          name,
-          createdAt: new Date(),
-          unitSalePrice,
-          unitProductSold: 0,
-          turnoversProduct: {
+        if (restaurant.admin.toString() === user.id) {
+          restaurant.products.unshift({
+            name,
             createdAt: new Date(),
-            turnoverYear: 0,
-          },
-          category,
-          status: 'draft',
-        });
-        await restaurant.save();
-        return restaurant;
+            unitSalePrice,
+            turnoversProductTest: {
+              income: 0,
+              month: format(date, 'MMMM'),
+              year: format(date, 'yyyy'),
+              sales: 0,
+            },
+            turnoversProductYear: {
+              createdAt: format(date, 'yyyy'),
+              turnoverYear: 0,
+              totalSales: 0,
+            },
+            category,
+            status: 'draft',
+          });
+          await restaurant.save();
+          return restaurant;
+        }
+        throw new AuthenticationError('Action not allowed');
       }
       throw new UserInputError('Restaurant not found');
     },
@@ -43,7 +79,7 @@ module.exports = {
       restaurantId, productId, updateProductInput:
       {
         name,
-        unitSalePrice,
+        // unitSalePrice,
         category,
         status,
       },
@@ -56,7 +92,7 @@ module.exports = {
         const myProduct = Object.values(restaurant.products)[productIndex];
         if (restaurant.admin.toString() === user.id) {
           myProduct.name = name;
-          myProduct.unitSalePrice = unitSalePrice;
+          // myProduct.unitSalePrice = unitSalePrice;
           myProduct.category = category;
           myProduct.status = status;
           await restaurant.save();
@@ -78,20 +114,27 @@ module.exports = {
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
         const thisYear = new Date();
-        const foundSale = restaurant.sales.some((e) => format(e.createdAt, 'yyyy') === format(thisYear, 'yyyy') && e.productId === productId);
+        const product = restaurant.products.find((e) => e.id === productId);
+        const foundTurnoversProductMonth = product.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
+
         if (restaurant.admin.toString() === user.id) {
-          const saleProduct = restaurant.sales.find((e) => e.productId === productId);
-          if (!foundSale) {
-            restaurant.sales.unshift({
-              productId,
-              createdAt: new Date(),
-              unitProductSold: +unitProductSold,
+          const turnoverMonth = product.turnoversProductMonth.find((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
+          const priceProduct = product.unitSalePrice;
+
+          if (!foundTurnoversProductMonth) {
+            product.turnoversProductMonth.unshift({
+              sales: +unitProductSold,
+              income: unitProductSold * priceProduct,
+              month: format(thisYear, 'MMMM'),
+              year: format(thisYear, 'yyyy'),
             });
           } else {
-            saleProduct.unitProductSold += unitProductSold;
+            turnoverMonth.sales += unitProductSold;
+            turnoverMonth.income = turnoverMonth.sales * priceProduct;
           }
-          turnoversProduct(restaurant, productId);
-          turnoversRestaurant(restaurant);
+
+          turnoverYearProduct(restaurant, product);
+          turnoversYearRestaurant(restaurant);
           await restaurant.save();
 
           return restaurant;
@@ -108,7 +151,7 @@ module.exports = {
 
       if (restaurant) {
         const productIndex = restaurant.products.findIndex((product) => product.id === productId);
-        if (restaurant.admin === user.id) {
+        if (restaurant.admin.toString() === user.id) {
           restaurant.products.splice(productIndex, 1);
           await restaurant.save();
           return restaurant;

@@ -2,46 +2,26 @@ const { gql } = require('apollo-server');
 
 module.exports = gql`
 
-# scalar Date
 
 type Restaurant {
   id: ID 
   name: String
   admin: User!
-  employees: [Employee]!
   products: [Product]!
-  turnoversRestaurant: [Turnover]!
-  sales: [Sales]!
+  turnoversRestaurantYear: [TurnoversRestaurantYear]!
+
 } 
-type Employee {
+
+type TurnoversRestaurantYear {
   id: ID
-  firstname: String
-  lastname: String
-  role: String
-  salary: Int
-  admin: String
-} 
-type Turnover {
-  id: ID
-  createdAt: Float, 
+  createdAt: String, 
   turnoverYear: Int,
-} 
-type Sales {
-  id: ID
-  productId: ID 
-  createdAt: Float, 
-  unitProductSold: Int,
+  totalSales: Int,
 } 
 input CreateRestaurant {
   name: String
 }
-
-input CreateEmployee {
-  firstname: String
-  lastname: String
-  role: String
-  salary: String
-} 
+ 
 
 type Query {
   getRestaurant(restaurantId : ID!): Restaurant!
@@ -50,7 +30,5 @@ type Query {
 type Mutation {
   createRestaurant(createRestaurantInput: CreateRestaurant): Restaurant!
   deleteRestaurant(restaurantId: ID!): Restaurant
-  createEmployee(restaurantId: String!, createEmployeeInput: CreateEmployee ): Restaurant
-  deleteEmployee(restaurantId: ID!, employeeId: ID! ): Restaurant
   updateRestaurant(restaurantId : ID!, createRestaurantInput: CreateRestaurant): Restaurant
 }`;

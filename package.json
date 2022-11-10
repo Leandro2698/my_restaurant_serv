@@ -2,9 +2,9 @@
   "name": "my_restaurant_serv",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "nodemon index"
+    "start": "nodemon -e ts,mjs,graphql index.ts"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "graphql": "^16.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.5"
-  },
+  }, 
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
     "eslint": "^8.23.0",

@@ -2,34 +2,46 @@ const { gql } = require('apollo-server');
 
 module.exports = gql`
 
+scalar DateTime
+
 type Product {
   id: ID
   name: String,
   createdAt: Float,
-  # unitProductSold: Int,
   unitSalePrice: Int,
   stock: Int
-  turnoverProduct: Int
-  turnoversProduct: [TurnoversProduct]
+  turnoversProductMonth: [TurnoversProductMonth]
+  turnoversProductYear: [TurnoversProductYear],
   category: String
   status: String
   delivery: Int
   omSite: Int
 } 
-type TurnoversProduct {
+
+type TurnoversProductYear {
   id: ID
-  createdAt: Float, 
+  createdAt: String, 
   turnoverYear: Int,
+  totalSales: Int,
 } 
-enum STATUS {
+type TurnoversProductMonth {
+  id: ID
+  income: Int,
+  month: String,
+  year: String,
+  sales: Int,
+} 
+
+enum STATUS { 
   draft
-  Published
+  published
 }
 enum CATEGORY {
+  none
   drink
   food
   other
-}
+} 
 input CreateProduct {
   name: String,
   unitSalePrice: Int,
@@ -37,7 +49,7 @@ input CreateProduct {
 } 
 input UpdateProduct {
   name: String,
-  unitSalePrice: Int,
+  # unitSalePrice: Int,
   status: STATUS
   category: CATEGORY
 } 
@@ -45,8 +57,13 @@ input SoldProduct {
   unitProductSold: Int, 
 } 
 
+type Query {
+  getProduct(restaurantId : ID!, productId: ID!): Product
+  getProducts(restaurantId : ID!): [Product]
+
+}
 type Mutation {
-  createProduct(restaurantId: String!, createProductInput: CreateProduct ): Restaurant
+  createProduct(restaurantId: ID!, createProductInput: CreateProduct ): Restaurant
   updateProduct(restaurantId : ID!, productId: ID!, updateProductInput: UpdateProduct): Restaurant
   soldProduct(restaurantId : ID!, productId: ID!, soldProductInput: SoldProduct): Restaurant
   deleteProduct(restaurantId: ID!, productId: ID! ): Restaurant

@@ -1,8 +1,9 @@
 const { AuthenticationError } = require('apollo-server');
+const { format } = require('date-fns');
 const Restaurant = require('../../models/Restaurant');
 const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
-// const turnoverRestaurant = require('../../util/turnoverRestaurant');
+
 module.exports = {
   Query: {
     async getRestaurants() {
@@ -29,10 +30,16 @@ module.exports = {
       },
     }, context) {
       const user = checkAuth(context);
+      const date = new Date();
       const newRestaurant = new Restaurant(
         {
           name,
           admin: user.id,
+          turnoversRestaurantYear: {
+            createdAt: format(date, 'yyyy'),
+            totalSales: 0,
+            turnoverYear: 0,
+          },
         },
       );
       const userRestaurant = await User.findById(newRestaurant.admin);

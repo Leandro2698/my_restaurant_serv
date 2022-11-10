@@ -57,7 +57,7 @@ module.exports = {
       // See if an old user exists with email attempting to register
       const user = await User.findOne({ email });
       if (user) {
-        throw new UserInputError('Email is taken', {
+        throw new UserInputError('Email is taken', { 
           errors: {
             email: 'This email is taken'
           }
@@ -73,6 +73,7 @@ module.exports = {
         lastname,
         email: email.toLowerCase(),
         password: encryptedPassword,
+        restaurants: []
 
       });
 

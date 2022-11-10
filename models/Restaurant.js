@@ -5,60 +5,47 @@ const restaurantSchema = new Schema(
     name: {
       type: String,
     },
-    description: {
-      type: String,
-    },
     admin: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-
-    employees: [
-      {
-        firstname: String,
-        lastname: String,
-        role: String,
-        salary: Number,
-        admin: String,
-      },
-    ],
-    sales: [
-      {
-        productId: String,
-        createdAt: Number,
-        unitProductSold: Number,
-
-      },
-    ],
     products: [
       {
         name: String,
-        createdAt: Number,
-        // unitProductSold: Number,
+        createdAt: Date,
         unitSalePrice: Number,
-        turnoverProduct: Number,
-        turnoversProduct: [
+        turnoversProductYear: [
           {
-            createdAt: Number,
+            createdAt: String,
             turnoverYear: Number,
+            totalSales: Number,
+          },
+        ],
+        turnoversProductMonth: [
+          {
+            income: Number,
+            month: String,
+            year: String,
+            sales: Number,
           },
         ],
         stock: Number,
         category: {
           type: String,
-          enum: ['drink', 'food', 'other'],
+          enum: ['none', 'drink', 'food', 'other'],
         },
         status: {
           type: String,
-          enum: ['new', 'draft', 'done'],
+          enum: ['draft', 'published'],
         },
         delivery: Number,
         onSite: Number,
       },
     ],
-    turnoversRestaurant: [
+    turnoversRestaurantYear: [
       {
-        createdAt: Number,
+        createdAt: String,
+        totalSales: Number,
         turnoverYear: Number,
       },
     ],

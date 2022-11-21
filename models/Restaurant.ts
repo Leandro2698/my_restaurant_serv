@@ -1,8 +1,9 @@
-const { model, Schema } = require('mongoose');
+import { model, Schema } from 'mongoose';
+import { Restaurant } from '../types';
 
-const restaurantSchema = new Schema(
+const restaurantSchema = new Schema<Restaurant>(
   {
-    name: {
+    name: { 
       type: String,
     },
     admin: {
@@ -12,12 +13,12 @@ const restaurantSchema = new Schema(
     products: [
       {
         name: String,
-        createdAt: Date,
+        // createdAt: Date,
         unitSalePrice: Number,
         turnoversProductYear: [
           {
             createdAt: String,
-            turnoverYear: Number,
+            turnoverYear: Number, 
             totalSales: Number,
           },
         ],
@@ -53,4 +54,5 @@ const restaurantSchema = new Schema(
   },
 );
 
-module.exports = model('Restaurant', restaurantSchema);
+const Restaurant = model<Restaurant>('Restaurant', restaurantSchema);
+export default Restaurant;

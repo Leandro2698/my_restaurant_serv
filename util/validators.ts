@@ -3,14 +3,28 @@
  * @param {[String]} Inputs string of input use
  * @returns error or valid.
  */
-module.exports.validateRegisterInput = (
-  firstname,
-  lastname,
-  email,
-  password,
-  confirmPassword,
+
+export interface ErrorsRegisterType {
+  firstname:string,
+  lastname:string,
+  email:string,
+  password:string,
+  confirmPassword:string,
+}
+ export const validateRegisterInput = (
+  firstname:string,
+  lastname:string,
+  email:string,
+  password:string,
+  confirmPassword:string,
 ) => {
-  const errors = {};
+  const errors:ErrorsRegisterType = {
+    firstname:'',
+    lastname:'',
+    email:'',
+    password:'',
+    confirmPassword:'',
+  };
   if (firstname.trim() === '') {
     errors.firstname = 'Firstname must not be empty';
   }
@@ -41,8 +55,16 @@ module.exports.validateRegisterInput = (
  * @param {[String]} Inputs string of input use
  * @returns error or valid.
  */
-module.exports.validateLoginInput = (email, password) => {
-  const errors = {};
+
+ export interface ErrorsLoginType {
+  email:string,
+  password:string,
+}
+export const validateLoginInput = (email:string, password:string) => {
+  const errors:ErrorsLoginType = {
+    email:'',
+    password:'',
+  };
 
   if (email.trim() === '') {
     errors.email = 'Email must not be empty';

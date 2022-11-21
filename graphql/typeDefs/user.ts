@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server');
+import { gql } from 'apollo-server';
 
-module.exports = gql`
+export default  gql`
 type User {
   id: ID
   firstname: String
@@ -26,7 +26,7 @@ input UpdateUser {
   lastname: String!
   email: String!
   restaurants: [ID]
-}
+} 
 input DeleteUser {
   id: ID!
 } 

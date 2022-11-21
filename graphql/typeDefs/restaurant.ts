@@ -1,8 +1,6 @@
-const { gql } = require('apollo-server');
+import { gql } from 'apollo-server';
 
-module.exports = gql`
-
-
+export default  gql`
 type Restaurant {
   id: ID 
   name: String
@@ -20,8 +18,7 @@ type TurnoversRestaurantYear {
 } 
 input CreateRestaurant {
   name: String
-}
- 
+} 
 
 type Query {
   getRestaurant(restaurantId : ID!): Restaurant!

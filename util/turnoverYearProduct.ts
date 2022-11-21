@@ -1,4 +1,5 @@
-const { format } = require('date-fns');
+import { format } from 'date-fns';
+import { Product, Restaurant, TurnoversProductYear } from '../types';
 /**
  * Make the calcul turnover for all products
  * @param {[Object]} restaurant object Restaurant
@@ -7,7 +8,7 @@ const { format } = require('date-fns');
 
 // TODO explain all var and functions
 
-module.exports = (restaurant, product) => {
+export default (restaurant:Restaurant, product:Product) => {
   const thisYear = new Date();
   const turnoversMonth = product.turnoversProductMonth;
   const allTurnoverMonth = [];
@@ -23,13 +24,12 @@ module.exports = (restaurant, product) => {
   const resultTurnoverYear = allTurnoverMonth.reduce((accumulator, value) => accumulator + value, 0);
   const resultSalesYear = allSalesMonth.reduce((accumulator, value) => accumulator + value, 0);
 
-  const foundTurnoverYear = product.turnoversProductYear.some((e) => e.createdAt === format(thisYear, 'yyyy'));
+  const foundTurnoverYear = product.turnoversProductYear.some((e:TurnoversProductYear) => e.createdAt === format(thisYear, 'yyyy'));
 
-  const turnoversProductThisYear = product.turnoversProductYear.find((e) => e.createdAt === format(thisYear, 'yyyy'));
-
-  if (foundTurnoverYear) {
-    turnoversProductThisYear.turnoverYear = resultTurnoverYear;
-    turnoversProductThisYear.totalSales = resultSalesYear;
+  const turnoversProductThisYear = product.turnoversProductYear.find((e:TurnoversProductYear) => e.createdAt === format(thisYear, 'yyyy'));
+  if (foundTurnoverYear && turnoversProductThisYear) {
+      turnoversProductThisYear.turnoverYear = resultTurnoverYear;
+      turnoversProductThisYear.totalSales = resultSalesYear;
   } else {
     product.turnoversProductYear.unshift({
       createdAt: format(thisYear, 'yyyy'),
@@ -39,3 +39,4 @@ module.exports = (restaurant, product) => {
   }
   return restaurant;
 };
+ 

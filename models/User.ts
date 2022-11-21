@@ -1,6 +1,7 @@
-const { model, Schema } = require('mongoose');
+import { model, Schema } from 'mongoose';
+import { User } from '../types';
 
-const userSchema = new Schema(
+const userSchema = new Schema<User>(
   {
     firstname: {
       type: String,
@@ -19,9 +20,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    create_at: {
-      type: String,
-    },
     restaurants: [
       {
         type: Schema.Types.ObjectId,
@@ -31,4 +29,6 @@ const userSchema = new Schema(
   },
 );
 
-module.exports = model('User', userSchema);
+const User = model<User>('User', userSchema);
+
+export default User;

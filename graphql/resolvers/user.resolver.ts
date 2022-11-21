@@ -1,14 +1,15 @@
-const { UserInputError } = require('apollo-server-errors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const User = require('../../models/User');
-const Restaurant = require('../../models/Restaurant');
-const { validateRegisterInput, validateLoginInput } = require('../../util/validators');
+import { UserInputError } from 'apollo-server-errors';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import User from '../../models/User';
+import Restaurant from '../../models/Restaurant';
+import { validateRegisterInput, validateLoginInput } from '../../util/validators';
+import { Resolvers, User as UserType } from '../../types';
 
 dotenv.config();
 
-function generateToken(user) {
+function generateToken(user:UserType) {
   return jwt.sign(
     {
       id: user.id,
@@ -20,21 +21,16 @@ function generateToken(user) {
   );
 }
 
-module.exports = {
+export const userResolver : Resolvers = {
   Query: {
     async getUser(_, { userId: id }) {
-      try {
         const user = await User.findById(id).populate(['restaurants']);
         if (user) {
           return user;
         }
         throw new Error('User not found');
-      } catch (err) {
-        throw new Error(err);
-      }
     },
-    /* eslint-disable */ 
-    async getUsers(_, {}) {
+    async getUsers() {
       const users = await User.find({}).populate(['restaurants']);
       console.log('Get_Users', users);
       return users;
@@ -78,7 +74,7 @@ module.exports = {
       });
 
       // Save our user in MongoDB
-      const res = await newUser.save();
+      const res:any = await newUser.save();
       // Create our JWT(attatch to our User model)
       const token = generateToken(res);
 
@@ -90,7 +86,7 @@ module.exports = {
       };
     },
 
-    async loginUser(_, { loginInput: { email, password } }) {
+    async loginUser(_, { loginInput: { email, password } }:any) {
       // Validate user data
       const { valid, errors } = validateLoginInput(email, password);
 
@@ -99,10 +95,9 @@ module.exports = {
       }
 
       // See if the user exists with the email
-      const user = await User.findOne({ email }).populate(['restaurants']);
+      const user:any  = await User.findOne({ email }).populate(['restaurants']);
 
       if (!user) {
-        errors.general = 'User not found';
         throw new UserInputError(
           'User not found',
           { errors },
@@ -112,7 +107,6 @@ module.exports = {
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
-        errors.general = 'Wrong crendetials';
         throw new UserInputError('Wrong crendetials', { errors });
       }
 
@@ -130,8 +124,7 @@ module.exports = {
         firstname, lastname, email, restaurants,
       },
     }) {
-      try {
-        const updateUser = await User.findByIdAndUpdate(
+        const updateUser  = await User.findByIdAndUpdate(
           id,
           {
             firstname,
@@ -141,28 +134,27 @@ module.exports = {
           },
           { new: true },
         );
-        const restaurantAdmin = await Restaurant.findById(updateUser.restaurants);
+        const restaurantAdmin:any  = await Restaurant.findById(updateUser?.restaurants);
+        if(updateUser){
+          restaurantAdmin?.admin.push(updateUser._id);
 
-        restaurantAdmin.admin.push(updateUser._id);
-        restaurantAdmin.save();
-        return updateUser.populate(['restaurants']);
-      } catch (err) {
-        console.log(err);
-      }
+          restaurantAdmin?.save();
+          return updateUser.populate(['restaurants']);
+        }
+        throw new UserInputError('User not found');
+      
     },
 
     async deleteUser(_, { deleteUserInput: { id } }) {
-      try {
-        const user = await User.findByIdAndRemove(id);
-        const userRestaurant = user.restaurants;
-        for (let i = 0; i < userRestaurant.length; i++) {
-          await Restaurant.findByIdAndRemove(userRestaurant[i]);
+        const user  = await User.findByIdAndRemove(id);
+        if(user){
+          const userRestaurant = user.restaurants;
+          for (let i = 0; i < userRestaurant.length; i++) {
+            await Restaurant.findByIdAndRemove(userRestaurant[i]);
+          }
+          return user;
         }
-        return user;
-      } catch (err) {
-        console.log(err);
+        throw new UserInputError('User not found');
       }
-    },
-
   },
 };

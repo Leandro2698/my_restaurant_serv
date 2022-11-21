@@ -1,4 +1,5 @@
-const { format } = require('date-fns');
+import { format } from 'date-fns';
+import { Restaurant, TurnoversProductYear, TurnoversRestaurantYear } from '../types';
 /**
  * Make the calcul turnover for all products
  * @param {[Object]} restaurant object Restaurant
@@ -7,12 +8,12 @@ const { format } = require('date-fns');
 
 // TODO explain all var and functions
 
-module.exports = (restaurant) => {
+export default (restaurant:Restaurant) => {
   const thisYear = new Date();
 
-  const foundTurnover = restaurant.turnoversRestaurantYear.some((e) => e.createdAt === format(thisYear, 'yyyy'));
+  const foundTurnover = restaurant.turnoversRestaurantYear.some((e:TurnoversRestaurantYear) => e.createdAt === format(thisYear, 'yyyy'));
 
-  const turnoverRestaurant = restaurant.turnoversRestaurantYear.find((e) => e.createdAt === format(thisYear, 'yyyy'));
+  const turnoverRestaurant = restaurant.turnoversRestaurantYear.find((e:TurnoversRestaurantYear) => e.createdAt === format(thisYear, 'yyyy'));
 
   const allTurnoverForThisYear = [];
   const allSalesForThisYear = [];
@@ -21,7 +22,7 @@ module.exports = (restaurant) => {
     const { turnoversProductYear } = restaurant.products[i];
     // const { turnoversProductMonth } = restaurant.products[i];
 
-    const turnoverProductThisYear = turnoversProductYear.filter((e) => e.createdAt === format(thisYear, 'yyyy'));
+    const turnoverProductThisYear = turnoversProductYear.filter((e:TurnoversProductYear) => e.createdAt === format(thisYear, 'yyyy'));
     if (turnoverProductThisYear.length > 0) {
       const { turnoverYear, totalSales } = turnoverProductThisYear[0];
       allTurnoverForThisYear.push(turnoverYear);
@@ -32,8 +33,7 @@ module.exports = (restaurant) => {
   const resultTurnoverYearRestaurant = allTurnoverForThisYear.reduce((accumulator, value) => accumulator + value, 0);
   // Calcul total sales this year Restaurant
   const resultSalesYearRestaurant = allSalesForThisYear.reduce((accumulator, value) => accumulator + value, 0);
-
-  if (foundTurnover) {
+  if (foundTurnover && turnoverRestaurant) {
     turnoverRestaurant.turnoverYear = resultTurnoverYearRestaurant;
     turnoverRestaurant.totalSales = resultSalesYearRestaurant;
   } else {

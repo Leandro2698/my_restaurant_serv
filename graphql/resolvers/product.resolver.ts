@@ -1,12 +1,15 @@
-const { UserInputError } = require('apollo-server');
-const { AuthenticationError } = require('apollo-server');
-const { format } = require('date-fns');
-const Restaurant = require('../../models/Restaurant');
-const checkAuth = require('../../util/check-auth');
-const turnoversYearRestaurant = require('../../util/turnoversYearRestaurant');
-const turnoverYearProduct = require('../../util/turnoverYearProduct');
+// const { UserInputError } = require('apollo-server');
+import { UserInputError } from 'apollo-server'
+// const { AuthenticationError } = require('apollo-server');
+import { AuthenticationError } from 'apollo-server'
+import { format } from 'date-fns';
+import Restaurant from '../../models/Restaurant'; 
+import checkAuth from '../../util/check-auth';
+import turnoversYearRestaurant from '../../util/turnoversYearRestaurant';
+import turnoverYearProduct from '../../util/turnoverYearProduct';
+import {Resolvers} from '../../types'
 
-module.exports = {
+export const productResolver : Resolvers = {
   Query: {
     async getProduct(_, { restaurantId, productId }, context) {
       const restaurant = await Restaurant.findById(restaurantId);
@@ -19,7 +22,7 @@ module.exports = {
         }
         throw new AuthenticationError('Action not allowed');
       }
-      throw new Error('product not found');
+      throw new Error('restaurant not found');
     },
     async getProducts(_, { restaurantId }, context) {
       const restaurant = await Restaurant.findById(restaurantId);
@@ -27,7 +30,7 @@ module.exports = {
       if (restaurant) {
         if (restaurant.admin.toString() === user.id) {
           const { products } = restaurant;
-          return products;
+          return products; 
         }
         throw new AuthenticationError('Action not allowed');
       }
@@ -45,26 +48,26 @@ module.exports = {
     }, context) {
       const user = checkAuth(context);
       const date = new Date();
+      console.log(`format(date, 'yyyy'),`, format(date, 'yyyy')) 
 
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
         if (restaurant.admin.toString() === user.id) {
           restaurant.products.unshift({
             name,
-            createdAt: new Date(),
             unitSalePrice,
-            turnoversProductTest: {
+            turnoversProductMonth: [{
               income: 0,
               month: format(date, 'MMMM'),
               year: format(date, 'yyyy'),
-              day: format(date, 'd'),
+              day: format(date, 'd'), 
               sales: 0,
-            },
-            turnoversProductYear: {
+            }],
+            turnoversProductYear: [{
               createdAt: format(date, 'yyyy'),
               turnoverYear: 0,
               totalSales: 0,
-            },
+            }],
             category,
             status: 'draft',
           });
@@ -109,7 +112,7 @@ module.exports = {
       {
         unitProductSold,
       },
-    }, context) {
+    }, context) { 
       const user = checkAuth(context);
 
       const restaurant = await Restaurant.findById(restaurantId);
@@ -117,34 +120,38 @@ module.exports = {
         const thisYear = new Date();
         const product = restaurant.products.find((e) => e.id === productId);
         // const foundTurnoversProductMonth = product.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
-        const foundTurnoversProductDay = product.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
+        const foundTurnoversProductDay = product?.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
         // console.log('foundTurfoundTurnoversProductDay', foundTurnoversProductDay);
         if (restaurant.admin.toString() === user.id) {
-          const turnoverMonth = product.turnoversProductMonth.find((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
-          const priceProduct = product.unitSalePrice;
+          if(product){
 
-          if (!foundTurnoversProductDay) {
-            product.turnoversProductMonth.unshift({
-              sales: +unitProductSold,
-              income: unitProductSold * priceProduct,
-              month: format(thisYear, 'MMMM'),
-              year: format(thisYear, 'yyyy'),
-              day: format(thisYear, 'd'),
-            });
-          } else {
-            turnoverMonth.sales += unitProductSold;
-            turnoverMonth.income = turnoverMonth.sales * priceProduct;
+            const turnoverMonth = product.turnoversProductMonth.find((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
+            const priceProduct = product?.unitSalePrice;
+            
+            if (!foundTurnoversProductDay) {
+              
+              product.turnoversProductMonth.unshift({ 
+                sales: +unitProductSold,
+                income: unitProductSold * priceProduct,
+                month: format(thisYear, 'MMMM'),
+                year: format(thisYear, 'yyyy'),
+                day: format(thisYear, 'd'),
+              });
+            } else if(product && turnoverMonth ) {
+              turnoverMonth.sales += unitProductSold;
+              turnoverMonth.income = turnoverMonth.sales * priceProduct;
+            }
+            
+            turnoverYearProduct(restaurant, product);
+            turnoversYearRestaurant(restaurant);
+            await restaurant.save();
+            
+            return restaurant;
           }
-
-          turnoverYearProduct(restaurant, product);
-          turnoversYearRestaurant(restaurant);
-          await restaurant.save();
-
-          return restaurant;
+          throw new AuthenticationError('Action not allowed');
         }
-        throw new AuthenticationError('Action not allowed');
       }
-      throw new UserInputError('Restaurant not found');
+        throw new UserInputError('Restaurant not found');
     },
 
     async deleteProduct(_, { restaurantId, productId }, context) {
@@ -163,6 +170,6 @@ module.exports = {
       } else {
         throw new UserInputError('Restaurant not found');
       }
-    },
+    }, 
   },
-};
+}

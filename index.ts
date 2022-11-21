@@ -1,15 +1,11 @@
 import  { ApolloServer } from 'apollo-server';
-import { format } from 'date-fns';
 import mongoose from 'mongoose';
-// const test = require('./test');
+import typeDefs  from './graphql/typeDefs/typeDefs';
+import resolvers  from './graphql/resolvers/resolvers';
 
-// test();
-const typeDefs = require('./graphql/typeDefs/typeDefs');
-const resolvers = require('./graphql/resolvers/resolvers');
-
-const { MONGODB } = require('./config/config');
-
-const PORT = process.env.port || 4004;
+// const { MONGODB } = require('./config/config');
+import { config } from './config/config'
+const PORT = process.env.port || 4009;
 
 const server = new ApolloServer({
   typeDefs,
@@ -18,7 +14,7 @@ const server = new ApolloServer({
 });
   
 mongoose
-  .connect(MONGODB) 
+  .connect(config.MONGODB) 
   .then(() => {
     console.log('MongoDB Connected');
     return server.listen({ port: PORT });  
@@ -29,4 +25,4 @@ mongoose
   .catch((err) => {                     
     console.error(err);                       
   });                               
-                                         
+  console.log(`confconfig`,config) 

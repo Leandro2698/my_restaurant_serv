@@ -4,8 +4,11 @@ import bcrypt from 'bcrypt';
 
 import mongoose from "mongoose";
 import { config } from 'dotenv';
+import { format } from 'date-fns';
 const mongoUri:string | undefined = config().parsed?.MONGO_URI
+
 async function fixtures(){
+  const date = new Date()
   await Restaurant.deleteMany()
   await User.deleteMany()
   const users:any =[
@@ -29,7 +32,10 @@ async function fixtures(){
   for(const user of users){
 
     const restaurants: any = [];
+    const products: any[] = [];
+
     for(let i =0 ; i < 3; i += 1) {
+    
       const restaurant =  {
         _id: new mongoose.Types.ObjectId() ,
       name: 'restaurant'+i,
@@ -37,6 +43,26 @@ async function fixtures(){
       products: [],
       turnoversRestaurantYearts: []
     }
+    const product:any = {
+      name: 'product'+i,
+        unitSalePrice: 10,
+        turnoversProductYear:[{
+          createdAt: format(date, 'yyyy'),
+          turnoverYear: 0,
+          totalSales: 0,
+        }],
+        turnoversProductMonth:[{
+          income: 0,
+          month: format(date, 'MMMM'),
+          year: format(date, 'yyyy'),
+          day: format(date, 'd'), 
+          sales: 0,
+        }],
+        category: 'none',
+        status: 'draft',
+    }
+      products.push(product)
+      // restaurant.products.push(products)
       restaurants.push(restaurant)
       user.restaurants.push(restaurant._id)
     }
@@ -44,7 +70,7 @@ async function fixtures(){
   } 
   await User.insertMany(users)
   }
-
+ 
 
 if(!mongoUri){
 throw('error mongo uri')
@@ -55,5 +81,3 @@ mongoose
     await fixtures() 
     process.exit()
   })     
-
-

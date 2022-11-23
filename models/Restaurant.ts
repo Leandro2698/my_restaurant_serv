@@ -13,7 +13,6 @@ const restaurantSchema = new Schema<Restaurant>(
     products: [
       {
         name: String,
-        // createdAt: Date,
         unitSalePrice: Number,
         turnoversProductYear: [
           {

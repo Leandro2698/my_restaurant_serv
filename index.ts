@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import typeDefs  from './graphql/typeDefs/typeDefs';
 import resolvers  from './graphql/resolvers/resolvers';
 
-// const { MONGODB } = require('./config/config');
 import { config } from './config/config'
 const PORT = process.env.port || 4009;
 

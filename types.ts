@@ -36,8 +36,8 @@ export type DeleteUser = {
 };
 
 export type LoginInput = {
-  email?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Mutation = {

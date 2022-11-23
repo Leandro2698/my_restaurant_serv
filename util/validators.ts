@@ -5,11 +5,11 @@
  */
 
 export interface ErrorsRegisterType {
-  firstname:string,
-  lastname:string,
-  email:string,
-  password:string,
-  confirmPassword:string,
+  firstname?:string,
+  lastname?:string,
+  email?:string,
+  password?:string,
+  confirmPassword?:string,
 }
  export const validateRegisterInput = (
   firstname:string,
@@ -18,13 +18,7 @@ export interface ErrorsRegisterType {
   password:string,
   confirmPassword:string,
 ) => {
-  const errors:ErrorsRegisterType = {
-    firstname:'',
-    lastname:'',
-    email:'',
-    password:'',
-    confirmPassword:'',
-  };
+  const errors:ErrorsRegisterType = {};
   if (firstname.trim() === '') {
     errors.firstname = 'Firstname must not be empty';
   }
@@ -57,14 +51,12 @@ export interface ErrorsRegisterType {
  */
 
  export interface ErrorsLoginType {
-  email:string,
-  password:string,
+  email?:string,
+  password?:string,
+  general?: string
 }
 export const validateLoginInput = (email:string, password:string) => {
-  const errors:ErrorsLoginType = {
-    email:'',
-    password:'',
-  };
+  const errors:ErrorsLoginType = {};
 
   if (email.trim() === '') {
     errors.email = 'Email must not be empty';

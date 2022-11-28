@@ -43,7 +43,7 @@ type Mutation {
 
 # Schema Restaurant ---------------------------------------------------------------------------------------
 type Restaurant {
-  id: ID!
+  _id: ID!
   name: String!
   admin: User!
   products: [Product!]!

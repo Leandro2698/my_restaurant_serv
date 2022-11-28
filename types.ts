@@ -173,8 +173,8 @@ export type RegisterInput = {
 
 export type Restaurant = {
   __typename?: 'Restaurant';
+  _id: Scalars['ID'];
   admin: User;
-  id: Scalars['ID'];
   name: Scalars['String'];
   products: Array<Product>;
   turnoversRestaurantYear: Array<TurnoversRestaurantYear>;
@@ -394,8 +394,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type RestaurantResolvers<ContextType = any, ParentType extends ResolversParentTypes['Restaurant'] = ResolversParentTypes['Restaurant']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   admin?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType>;
   turnoversRestaurantYear?: Resolver<Array<ResolversTypes['TurnoversRestaurantYear']>, ParentType, ContextType>;

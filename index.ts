@@ -4,16 +4,19 @@ import typeDefs  from './graphql/typeDefs/typeDefs';
 import resolvers  from './graphql/resolvers/resolvers';
 
 import { config } from './config/config'
-const PORT = process.env.port || 4009;
+const PORT = process.env.PORT || 4010;
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => ({ req }),
 });
-  
+
 mongoose
-  .connect(config.MONGODB) 
+  .connect(config.MONGODB,{
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASS
+  }) 
   .then(() => {
     console.log('MongoDB Connected');
     return server.listen({ port: PORT });  
@@ -24,4 +27,3 @@ mongoose
   .catch((err) => {                     
     console.error(err);                       
   });                               
-  console.log(`confconfig`,config) 

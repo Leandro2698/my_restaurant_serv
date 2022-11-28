@@ -14,8 +14,8 @@ function generateToken(user:UserType) {
     {
       id: user.id,
       firstname: user.firstname,
-      restaurants: user.restaurants,
-    },
+      // restaurants: user.restaurants,
+    }, 
     `${process.env.JWT_SECRET}`,
     { expiresIn: '2h' },
   );

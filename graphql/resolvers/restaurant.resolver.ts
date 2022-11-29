@@ -4,6 +4,7 @@ import Restaurant from '../../models/Restaurant';
 import User from '../../models/User';
 import { Resolvers } from '../../types';
 import checkAuth from '../../util/check-auth';
+import { validateCreateRestaurantInput } from '../../util/validators/validatorRestaurant';
 
 export const restaurantResolver : Resolvers = {
   Query: {
@@ -31,7 +32,12 @@ export const restaurantResolver : Resolvers = {
       },
     }, context) {
       const user = checkAuth(context);
-      const date = new Date();
+      const date = Date.now();
+      const { valid, errors } = validateCreateRestaurantInput(name);
+      if (!valid) {
+        throw new UserInputError('Errors', { errors });
+      }
+ 
       const newRestaurant = new Restaurant(
         {
           name,

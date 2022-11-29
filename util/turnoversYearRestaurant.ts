@@ -9,7 +9,8 @@ import { Restaurant, TurnoversProductYear, TurnoversRestaurantYear } from '../ty
 // TODO explain all var and functions
 
 export default (restaurant:Restaurant) => {
-  const thisYear = new Date();
+  const thisYear = Date.now();
+  
 
   const foundTurnover = restaurant.turnoversRestaurantYear.some((e:TurnoversRestaurantYear) => e.createdAt === format(thisYear, 'yyyy'));
 

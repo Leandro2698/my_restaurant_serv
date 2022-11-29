@@ -9,7 +9,7 @@ import { Product, Restaurant, TurnoversProductYear } from '../types';
 // TODO explain all var and functions
 
 export default (restaurant:Restaurant, product:Product) => {
-  const thisYear = new Date();
+  const thisYear = Date.now();
   const turnoversMonth = product.turnoversProductMonth;
   const allTurnoverMonth = [];
   const allSalesMonth = [];

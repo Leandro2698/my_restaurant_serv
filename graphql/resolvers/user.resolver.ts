@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import User from '../../models/User';
 import Restaurant from '../../models/Restaurant';
-import { validateRegisterInput, validateLoginInput } from '../../util/validators';
+import { validateRegisterInput, validateLoginInput } from '../../util/validators/validatorUser';
 import { Resolvers, User as UserType } from '../../types';
 
 dotenv.config();

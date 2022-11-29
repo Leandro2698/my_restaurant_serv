@@ -1,12 +1,6 @@
-/**
- * Verify if all the inputs respects somesrules.
- * @param {[String]} Inputs string of input use
- * @returns error or valid.
- */
+import { ErrorsLoginType, ErrorsRegisterType } from "./type";
 
-import { ErrorsRegisterType } from "./validators/type";
-
- export const validateRegisterInput = (
+export const validateRegisterInput = (
   firstname:string,
   lastname:string,
   email:string,
@@ -39,17 +33,7 @@ import { ErrorsRegisterType } from "./validators/type";
     valid: Object.keys(errors).length < 1,
   };
 };
-/**
- * Verify if all the inputs respects somesrules.
- * @param {[String]} Inputs string of input use
- * @returns error or valid.
- */
 
- export interface ErrorsLoginType {
-  email?:string,
-  password?:string,
-  general?: string
-}
 export const validateLoginInput = (email:string, password:string) => {
   const errors:ErrorsLoginType = {};
 

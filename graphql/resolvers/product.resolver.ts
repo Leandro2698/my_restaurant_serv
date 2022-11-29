@@ -47,7 +47,7 @@ export const productResolver : Resolvers = {
       },
     }, context) {
       const user = checkAuth(context);
-      const date = new Date();
+      const date = Date.now();
       console.log(`format(date, 'yyyy'),`, format(date, 'yyyy')) 
 
       const restaurant = await Restaurant.findById(restaurantId);
@@ -114,22 +114,24 @@ export const productResolver : Resolvers = {
       },
     }, context) { 
       const user = checkAuth(context);
+      console.log(`user`, user)
 
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
-        const thisYear = new Date();
+        const thisYear = Date.now();
+        console.log(`(thiformatsthisYear, 'd')`,format(thisYear, 'd'))
+        console.log(`thisthisYear`,thisYear)
         const product = restaurant.products.find((e) => e.id === productId);
-        // const foundTurnoversProductMonth = product.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
         const foundTurnoversProductDay = product?.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
-        // console.log('foundTurfoundTurnoversProductDay', foundTurnoversProductDay);
+
         if (restaurant.admin.toString() === user.id) {
           if(product){
 
-            const turnoverMonth = product.turnoversProductMonth.find((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy'));
+            const turnoverDay = product.turnoversProductMonth.find((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
             const priceProduct = product?.unitSalePrice;
             
             if (!foundTurnoversProductDay) {
-              
+              console.log(`thisthisYear`,thisYear)
               product.turnoversProductMonth.unshift({ 
                 sales: +unitProductSold,
                 income: unitProductSold * priceProduct,
@@ -137,9 +139,9 @@ export const productResolver : Resolvers = {
                 year: format(thisYear, 'yyyy'),
                 day: format(thisYear, 'd'),
               });
-            } else if(product && turnoverMonth ) {
-              turnoverMonth.sales += unitProductSold;
-              turnoverMonth.income = turnoverMonth.sales * priceProduct;
+            } else if(product && turnoverDay ) {
+              turnoverDay.sales += unitProductSold;
+              turnoverDay.income = turnoverDay.sales * priceProduct;
             }
             
             turnoverYearProduct(restaurant, product);

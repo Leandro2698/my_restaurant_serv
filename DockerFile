@@ -1,0 +1,18 @@
+FROM node
+
+WORKDIR /home/node/app
+
+COPY package.json package-lock.json .
+
+RUN npm install
+
+COPY codegen.yml fixtures.ts index.ts tsconfig.json .
+COPY config ./config
+COPY graphql ./graphql
+COPY models ./models
+COPY util ./util
+
+EXPOSE 4010
+
+# start app
+CMD ["npm", "run", "docker"]

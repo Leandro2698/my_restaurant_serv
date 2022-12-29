@@ -21,9 +21,9 @@ export default (restaurant:Restaurant) => {
 
   for (let i = 0; i < restaurant.products.length; i += 1) {
     const { turnoversProductYear } = restaurant.products[i];
-    // const { turnoversProductMonth } = restaurant.products[i];
 
     const turnoverProductThisYear = turnoversProductYear.filter((e:TurnoversProductYear) => e.createdAt === format(thisYear, 'yyyy'));
+    
     if (turnoverProductThisYear.length > 0) {
       const { turnoverYear, totalSales } = turnoverProductThisYear[0];
       allTurnoverForThisYear.push(turnoverYear);

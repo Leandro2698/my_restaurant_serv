@@ -74,13 +74,10 @@ type Product {
   id: ID
   name: String!,
   unitSalePrice: Int!,
-  stock: Int
   turnoversProductMonth: [TurnoversProductMonth!]!
   turnoversProductYear: [TurnoversProductYear!]!,
   category: String
   status: String!
-  delivery: Int
-  omSite: Int
 } 
 
 type TurnoversProductYear {

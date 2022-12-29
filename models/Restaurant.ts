@@ -30,7 +30,6 @@ const restaurantSchema = new Schema<Restaurant>(
             day: String,
           },
         ],
-        stock: Number,
         category: {
           type: String,
           enum: ['none', 'drink', 'food', 'other'],
@@ -39,8 +38,6 @@ const restaurantSchema = new Schema<Restaurant>(
           type: String,
           enum: ['draft', 'published'],
         },
-        delivery: Number,
-        onSite: Number,
       },
     ],
     turnoversRestaurantYear: [

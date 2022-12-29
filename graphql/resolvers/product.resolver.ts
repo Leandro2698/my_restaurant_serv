@@ -119,8 +119,6 @@ export const productResolver : Resolvers = {
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
         const thisYear = Date.now();
-        console.log(`(thiformatsthisYear, 'd')`,format(thisYear, 'd'))
-        console.log(`thisthisYear`,thisYear)
         const product = restaurant.products.find((e) => e.id === productId);
         const foundTurnoversProductDay = product?.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
 

@@ -121,12 +121,9 @@ export type MutationUpdateUserArgs = {
 export type Product = {
   __typename?: 'Product';
   category?: Maybe<Scalars['String']>;
-  delivery?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
-  omSite?: Maybe<Scalars['Int']>;
   status: Scalars['String'];
-  stock?: Maybe<Scalars['Int']>;
   turnoversProductMonth: Array<TurnoversProductMonth>;
   turnoversProductYear: Array<TurnoversProductYear>;
   unitSalePrice: Scalars['Int'];
@@ -372,12 +369,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type ProductResolvers<ContextType = any, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = {
   category?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  delivery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  omSite?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  stock?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   turnoversProductMonth?: Resolver<Array<ResolversTypes['TurnoversProductMonth']>, ParentType, ContextType>;
   turnoversProductYear?: Resolver<Array<ResolversTypes['TurnoversProductYear']>, ParentType, ContextType>;
   unitSalePrice?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;

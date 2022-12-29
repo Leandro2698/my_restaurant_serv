@@ -32,7 +32,6 @@ export const userResolver : Resolvers = {
     },
     async getUsers() {
       const users = await User.find({}).populate(['restaurants']);
-      console.log('Get_Users', users);
       return users;
     },
   },

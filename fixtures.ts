@@ -29,7 +29,7 @@ function getRandomInt(max:number) {
 }
 
 
-const mongoUri:string | undefined = config().parsed?.MONGO_URI
+const mongoUri = process.env.MONGO_URI  
 
 const registerUser = `mutation RegisterUser($registerInput: RegisterInput!) {
   registerUser(registerInput: $registerInput) {
@@ -55,7 +55,7 @@ const createProductMut = `mutation CreateProduct($restaurantId: ID!, $createProd
     _id
     name
     products {
-      id
+      id 
       name
     }
   }
@@ -70,8 +70,8 @@ const email = "lolu@gmail.com";
 const password = "lolu"; 
 
 async function fixtures() {
-  await Restaurant.deleteMany()
-  await User.deleteMany()
+  await Restaurant.deleteOne({name:"restoFixture"})
+  await User.deleteOne({email: email})
   const response = await request("localhost:4010").post('/graphql').send(
     {
         query: registerUser,

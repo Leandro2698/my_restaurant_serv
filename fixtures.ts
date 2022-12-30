@@ -1,10 +1,5 @@
 import Restaurant from './models/Restaurant'
 import User from './models/User'
-import bcrypt from 'bcrypt';
-import { faker } from '@faker-js/faker';
-import { config } from 'dotenv';
-import { format } from 'date-fns';
-import { Restaurant as TypeRestaurant } from './types';
 import request from 'supertest';
 
 import  { ApolloServer } from 'apollo-server';

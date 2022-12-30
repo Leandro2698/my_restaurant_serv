@@ -129,7 +129,6 @@ export const productResolver : Resolvers = {
             const priceProduct = product?.unitSalePrice;
             
             if (!foundTurnoversProductDay) {
-              console.log(`thisthisYear`,thisYear)
               product.turnoversProductMonth.unshift({ 
                 sales: +unitProductSold,
                 income: unitProductSold * priceProduct,
@@ -138,6 +137,7 @@ export const productResolver : Resolvers = {
                 day: format(thisYear, 'd'),
               });
             } else if(product && turnoverDay ) {
+              product.status = 'published';
               turnoverDay.sales += unitProductSold;
               turnoverDay.income = turnoverDay.sales * priceProduct;
             }

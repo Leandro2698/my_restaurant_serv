@@ -1,0 +1,19 @@
+name: deploy
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+jobs:
+  check-bats-version:
+    runs-on: self-hosted
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: adebray.com
+        username: leandro
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: rm -rf my_restaurant_app && git clone git@github.com:Leandro2698/my_restaurant_app.git && cd my_restaurant_app && echo MONGO_USER=${{secrets.DB_USERNAME}} >> .env && echo MONGO_PASS=${{secrets.DB_PASSWORD}} >> .env && sh install.sh

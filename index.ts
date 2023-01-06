@@ -6,6 +6,7 @@ import { EventEmitter } from "events"
  
 
 import { config } from './config/config'
+import { getUser } from './util/verifyToken';
 const PORT = process.env.PORT || 4010;
 declare interface AppReady {
   on(event: "ready", listener: () => void): this;
@@ -19,7 +20,16 @@ export const appEvent = new AppReady;
 const server =  new ApolloServer  ({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ req }),
+  context: ({ req, res }) => {
+    if(req.headers.authorization){
+      const userLogged = getUser(req.headers.authorization);
+      return {
+        req,
+        res,
+        userLogged,
+      };
+    }
+    },
 });
 
 mongoose

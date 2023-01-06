@@ -1,4 +1,4 @@
-import { UserInputError } from 'apollo-server-errors';
+import { AuthenticationError, UserInputError } from 'apollo-server-errors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -14,7 +14,6 @@ function generateToken(user:UserType) {
     {
       id: user.id,
       firstname: user.firstname,
-      // restaurants: user.restaurants,
     }, 
     `${process.env.JWT_SECRET}`,
     { expiresIn: '2h' },
@@ -23,10 +22,13 @@ function generateToken(user:UserType) {
 
 export const userResolver : Resolvers = {
   Query: {
-    async getUser(_, { userId: id }) {
+    async getUser(_, { userId: id },context) {
         const user = await User.findById(id).populate(['restaurants']);
         if (user) {
-          return user;
+          if (user.id === context.userLogged.id) {
+            return user;
+          }
+          throw new AuthenticationError('Action not allowed');
         }
         throw new Error('User not found');
     },
@@ -57,7 +59,7 @@ export const userResolver : Resolvers = {
             email: 'This email is taken'
           }
         });
-      }
+      } 
 
       // Emcrypt password
       const encryptedPassword = await bcrypt.hash(password, 10);
@@ -110,7 +112,6 @@ export const userResolver : Resolvers = {
       }
 
       const token = generateToken(user);
-      console.log('login user', user);
       return {
         ...user._doc,
         id: user._id,

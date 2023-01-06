@@ -4,7 +4,6 @@ import { UserInputError } from 'apollo-server'
 import { AuthenticationError } from 'apollo-server'
 import { format } from 'date-fns';
 import Restaurant from '../../models/Restaurant'; 
-import checkAuth from '../../util/check-auth';
 import turnoversYearRestaurant from '../../util/turnoversYearRestaurant';
 import turnoverYearProduct from '../../util/turnoverYearProduct';
 import {Resolvers} from '../../types'
@@ -13,9 +12,8 @@ export const productResolver : Resolvers = {
   Query: {
     async getProduct(_, { restaurantId, productId }, context) {
       const restaurant = await Restaurant.findById(restaurantId);
-      const user = checkAuth(context);
       if (restaurant) {
-        if (restaurant.admin.toString() === user.id) {
+        if (restaurant.admin.toString() === context.userLogged.id) {
           const productIndex = restaurant.products.findIndex((product) => product.id === productId);
           const myProduct = Object.values(restaurant.products)[productIndex];
           return myProduct;
@@ -26,9 +24,9 @@ export const productResolver : Resolvers = {
     },
     async getProducts(_, { restaurantId }, context) {
       const restaurant = await Restaurant.findById(restaurantId);
-      const user = checkAuth(context);
+ 
       if (restaurant) {
-        if (restaurant.admin.toString() === user.id) {
+        if (restaurant.admin.toString() === context.userLogged.id) {
           const { products } = restaurant;
           return products; 
         }
@@ -46,13 +44,13 @@ export const productResolver : Resolvers = {
         category,
       },
     }, context) {
-      const user = checkAuth(context);
+ 
       const date = Date.now();
       console.log(`format(date, 'yyyy'),`, format(date, 'yyyy')) 
 
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
-        if (restaurant.admin.toString() === user.id) {
+        if (restaurant.admin.toString() === context.userLogged.id) {
           restaurant.products.unshift({
             name,
             unitSalePrice,
@@ -88,13 +86,13 @@ export const productResolver : Resolvers = {
         status,
       },
     }, context) {
-      const user = checkAuth(context);
+ 
 
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
         const productIndex = restaurant.products.findIndex((product) => product.id === productId);
         const myProduct = Object.values(restaurant.products)[productIndex];
-        if (restaurant.admin.toString() === user.id) {
+        if (restaurant.admin.toString() === context.userLogged.id) {
           myProduct.name = name;
           // myProduct.unitSalePrice = unitSalePrice;
           myProduct.category = category;
@@ -113,8 +111,6 @@ export const productResolver : Resolvers = {
         unitProductSold,
       },
     }, context) { 
-      const user = checkAuth(context);
-      console.log(`user`, user)
 
       const restaurant = await Restaurant.findById(restaurantId);
       if (restaurant) {
@@ -122,7 +118,7 @@ export const productResolver : Resolvers = {
         const product = restaurant.products.find((e) => e.id === productId);
         const foundTurnoversProductDay = product?.turnoversProductMonth.some((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
 
-        if (restaurant.admin.toString() === user.id) {
+        if (restaurant.admin.toString() === context.userLogged.id) {
           if(product){
 
             const turnoverDay = product.turnoversProductMonth.find((e) => e.month === format(thisYear, 'MMMM') && e.year === format(thisYear, 'yyyy') && e.day === format(thisYear, 'd'));
@@ -155,13 +151,13 @@ export const productResolver : Resolvers = {
     },
 
     async deleteProduct(_, { restaurantId, productId }, context) {
-      const user = checkAuth(context);
+ 
 
       const restaurant = await Restaurant.findById(restaurantId);
 
       if (restaurant) {
         const productIndex = restaurant.products.findIndex((product) => product.id === productId);
-        if (restaurant.admin.toString() === user.id) {
+        if (restaurant.admin.toString() === context.userLogged.id) {
           restaurant.products.splice(productIndex, 1);
           await restaurant.save();
           return restaurant;

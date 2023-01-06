@@ -112,7 +112,7 @@ async function fixtures() {
   for(let i = 1 ; i <= 12; i += 1) {
     const month = i < 10 ? `0${i}` : `${i}`;
     console.log(`month`, month)
-    Date.now = () => Math.floor(new Date(`2022.${month}.02`).getTime() )
+    Date.now = () => Math.floor(new Date(`2023.${month}.02`).getTime() )
 
     const loginResponse = await request("localhost:4010").post('/graphql')
     .send(

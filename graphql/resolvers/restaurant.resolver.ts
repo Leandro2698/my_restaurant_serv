@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import Restaurant from '../../models/Restaurant';
 import User from '../../models/User';
 import { Resolvers } from '../../types';
-import checkAuth from '../../util/check-auth';
+
 import { validateCreateRestaurantInput } from '../../util/validators/validatorRestaurant';
 
 export const restaurantResolver : Resolvers = {
@@ -16,10 +16,13 @@ export const restaurantResolver : Resolvers = {
         throw new Error('restaurant not found');
       },
       
-      async getRestaurant(_, { restaurantId }) {
+      async getRestaurant(_, { restaurantId }, context) {
         const restaurant = await Restaurant.findById(restaurantId).populate('admin');
-        if (restaurant) {
-          return restaurant;
+        if (restaurant) { 
+          if(restaurant.admin.id === context.userLogged.id){
+            return restaurant;
+          }
+          throw new AuthenticationError('Action not allowed');
         }
         throw new Error('restaurant not found');
       },
@@ -31,7 +34,6 @@ export const restaurantResolver : Resolvers = {
         name,
       },
     }, context) {
-      const user = checkAuth(context);
       const date = Date.now();
       const { valid, errors } = validateCreateRestaurantInput(name);
       if (!valid) {
@@ -41,7 +43,7 @@ export const restaurantResolver : Resolvers = {
       const newRestaurant = new Restaurant(
         {
           name,
-          admin: user.id,
+          admin: context.userLogged.id,
           turnoversRestaurantYear: {
             createdAt: format(date, 'yyyy'),
             totalSales: 0,
@@ -64,11 +66,9 @@ export const restaurantResolver : Resolvers = {
           name,
         },
       }, context) {
-        const user = checkAuth(context);
         const restaurant = await Restaurant.findById(restaurantId);
         if (restaurant) {
-          if(restaurant.admin.toString() === user.id){
-
+          if(restaurant.admin.toString() === context.userLogged.id){
             const newRestaurant = await Restaurant.findByIdAndUpdate(
               restaurantId,
               {
@@ -85,12 +85,11 @@ export const restaurantResolver : Resolvers = {
       },
 
       async deleteRestaurant(_, { restaurantId }, context) {
-        const user = checkAuth(context);
         const restaurant = await Restaurant.findById(restaurantId);
         if(restaurant){
           
-          if (restaurant.admin.toString() === user.id) {
-            const deleteRestaurantUser = await User.findById(user.id);
+          if (restaurant.admin.toString() === context.userLogged.id) {
+            const deleteRestaurantUser = await User.findById(context.userLogged.id);
             const idRestaurant:any = restaurantId
             const restaurantToRemove = deleteRestaurantUser?.restaurants.indexOf(idRestaurant);
             if(restaurantToRemove) { 

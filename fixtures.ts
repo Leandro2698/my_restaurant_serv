@@ -122,6 +122,7 @@ async function fixtures() {
           "loginInput": {
             "email": email,
             "password": password
+            
           }
         }
       }

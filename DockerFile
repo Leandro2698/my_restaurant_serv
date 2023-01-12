@@ -6,11 +6,11 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
-COPY . ./
-# COPY config ./config
-# COPY graphql ./graphql
-# COPY models ./models
-# COPY util ./util
+COPY codegen.yml context.ts fixtures.ts index.ts tsconfig.json ./
+COPY config ./config
+COPY graphql ./graphql
+COPY models ./models
+COPY util ./util
 EXPOSE 4010
 
 # start app

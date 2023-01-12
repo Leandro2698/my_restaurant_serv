@@ -8,12 +8,13 @@ import typeDefs  from './graphql/typeDefs/typeDefs';
 import resolvers  from './graphql/resolvers/resolvers';
 
 import { config as myConfig } from './config/config'
+import context from './context';
 const PORT = process.env.PORT || 4010;
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ req }),
+  context: context,
 });
 
 // const date:Date = new Date('2022-02-02')
@@ -42,7 +43,6 @@ const loginUser = `mutation LoginUser($loginInput: LoginInput) {
 const createRestaurantMut = `mutation CreateRestaurant($createRestaurantInput: CreateRestaurant!) {
   createRestaurant(createRestaurantInput: $createRestaurantInput) {
     _id
-    name
   }
 }`
 const createProductMut = `mutation CreateProduct($restaurantId: ID!, $createProductInput: CreateProduct!) {
@@ -81,6 +81,7 @@ async function fixtures() {
         }
       }
   );
+
   const createRestaurantResponse = await request("localhost:4010").post('/graphql')
   .set('Authorization', response.body.data.registerUser.token)
   .send(
@@ -92,7 +93,10 @@ async function fixtures() {
           }
         }
       }
-  );
+    
+    );
+
+  console.log(`createRestaurantResponse`,createRestaurantResponse.body)
   const createProductResponse = await request("localhost:4010").post('/graphql')
   .set('Authorization', response.body.data.registerUser.token)
   .send(

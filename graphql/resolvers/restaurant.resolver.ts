@@ -39,6 +39,7 @@ export const restaurantResolver : Resolvers = {
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
+      console.log(`foo`, context.userLogged)
  
       const newRestaurant = new Restaurant(
         {
